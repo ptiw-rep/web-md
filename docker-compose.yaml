@@ -1,0 +1,28 @@
+services:
+  md-exporter:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - ADMIN_SECRET=${ADMIN_SECRET:?ADMIN_SECRET is required}
+      - ALLOWED_DOMAINS=${ALLOWED_DOMAINS:-}
+      - BLOCKED_DOMAINS=${BLOCKED_DOMAINS:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - sqlite_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2'
+
+volumes:
+  sqlite_data:
+    driver: local

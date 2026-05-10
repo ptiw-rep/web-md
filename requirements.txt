@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy
+aiosqlite
+playwright
+beautifulsoup4>
+markdownify
+httpx[http2]
+python-multipart
