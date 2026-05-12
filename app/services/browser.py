@@ -7,8 +7,9 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 class BrowserService:
-    async def fetch_page(self, url: str) -> dict[str, str]:
+    async def fetch_page(self, url: str, timeout_ms: int | None = None) -> dict[str, str]:
         validate_url(url)
+        timeout = timeout_ms or settings.playwright_timeout_ms
         
         async with async_playwright() as p:
             browser = await p.chromium.launch(
@@ -22,7 +23,7 @@ class BrowserService:
             page = await context.new_page()
             try:
                 logger.info(f"Fetching: {url}")
-                response = await page.goto(url, wait_until="networkidle", timeout=settings.playwright_timeout_ms)
+                response = await page.goto(url, wait_until="networkidle", timeout=timeout)
                 if not response or not response.ok:
                     raise PlaywrightError(f"HTTP {response.status if response else 'Unknown'}")
                     

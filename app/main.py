@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 import logging
 from app.config import get_settings
 from app.db import init_db
-from app.routes import convert, admin
+from app.routes import convert, admin, batch
 from app.auth import verify_api_key
 
 settings = get_settings()
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
 
     app.include_router(convert.router, prefix="/api/v1", dependencies=[Depends(verify_api_key)])
     app.include_router(admin.router, prefix="/api/v1")
+    app.include_router(batch.router, prefix="/api/v1", dependencies=[Depends(verify_api_key)])
 
     @app.get("/health")
     async def health(): return {"status": "healthy", "env": settings.environment}
