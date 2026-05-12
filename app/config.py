@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     blocked_domains: str = ""
 
     log_level: str = "INFO"
+    
+    # Batch processing
+    batch_max_urls: int = Field(default=50, description="Max URLs per batch request")
+    batch_concurrency: int = Field(default=3, description="Max parallel browser instances")
+    batch_timeout_per_url_s: int = Field(default=120, description="Timeout per URL in batch")
 
     # CORS Configuration
     cors_allow_origins: str = "*"  # Comma-separated origins, or "*" for all
